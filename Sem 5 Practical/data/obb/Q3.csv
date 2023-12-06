@@ -1,0 +1,10 @@
+#,Movie_title,Director_name,Language,Length,Budget,Gross_collections,User_rating,Critic_rating
+1,AAA,Ram,Urdu,120,90,80,4,7
+2,BBB,Eash,Hindi,NULL,65,70,6,6
+3,CCC,Anju,Hindi,125,100,150,9,8
+4,DDD,Jay,Hindi,150,85,85,6,5
+5,EEE,Eash,Hindi,90,60,NULL,7,5
+6,FFF,Suraj,French,100,115,120,8,6
+7,GGG,Anju,French,NULL,80,81,5,5
+8,HHH,Ram,French,115,50,40,3,4
+9,JJJ,Anju,French,120,92,75,3,6

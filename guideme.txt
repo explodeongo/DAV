@@ -1,0 +1,454 @@
+https://jovian.com/aakashns/python-matplotlib-data-visualization
+# Part a
+
+List1 = ['Good Morning', 'Good Evening', 'Hello', 'Good afternoon', 'Greetings', 'Good Morning', 'Nice to see you']
+
+# List comprehension to store unique multi-word strings in Newlist
+Newlist = list(set([s for s in List1 if ' ' in s]))
+
+# Anonymous function to sort List1 based on the last character of each string
+List1_sorted = sorted(List1, key=lambda x: x[-1])
+
+print("Newlist:", Newlist)
+print("List1_sorted:", List1_sorted)
+
+# Part b
+from collections import defaultdict
+
+Anydict = defaultdict(list)
+
+for s in List1:
+    word_count = len(s.split())
+    Anydict[word_count].append(s)
+
+print("Anydict:", dict(Anydict))
+
+# Create a data series 'Ds1' using the created dictionary 'Anydict'
+import pandas as pd
+
+Ds1 = pd.Series(dict(Anydict))
+print("Ds1:")
+print(Ds1)
+
+# Part c
+import matplotlib.pyplot as plt
+
+# Bar plot
+plt.bar(Ds1.index, Ds1.values, color='skyblue')
+plt.xlabel('Word Count')
+plt.ylabel('Frequency')
+plt.title('Frequency of Strings with Equal Word Counts in List1')
+plt.show()
+
+
+
+import numpy as np
+
+# Create a 2D random integer array
+random_array = np.random.randint(1, 100, size=(3, 4))
+
+# Compute mean, standard deviation, and variance along the second axis
+mean_values = np.mean(random_array, axis=1)
+std_deviation = np.std(random_array, axis=1)
+variance = np.var(random_array, axis=1)
+
+print("Random Array:")
+print(random_array)
+print("Mean along the second axis:", mean_values)
+print("Standard Deviation along the second axis:", std_deviation)
+print("Variance along the second axis:", variance)
+
+# Given array
+B = np.array([56, 48, 22, 41, 78, 91, 24, 46, 8, 33])
+
+# Get the indices of the sorted elements
+sorted_indices = np.argsort(B)
+
+print("Original Array:", B)
+print("Indices of Sorted Elements:", sorted_indices)
+
+# User inputs for dimensions
+m = int(input("Enter the number of rows (m): "))
+n = int(input("Enter the number of columns (n): "))
+
+# Create a 2D array of size m x n with random integer elements
+array_mxn = np.random.randint(1, 100, size=(m, n))
+
+# Print shape, type, and data type of the array
+print("Original Array:")
+print("Shape:", array_mxn.shape)
+print("Type:", type(array_mxn))
+print("Data Type:", array_mxn.dtype)
+
+# Reshape the array into nxm array
+reshaped_array = array_mxn.reshape((n, m))
+
+print("\nReshaped Array:")
+print(reshaped_array)
+
+
+# Given array
+given_array = np.array([1, 0, 5, 0, np.nan, 7, 0, 9])
+
+# Test conditions
+is_zero = (given_array == 0)
+is_nonzero = (given_array != 0)
+is_nan = np.isnan(given_array)
+
+# Record indices of elements
+zero_indices = np.where(is_zero)[0]
+nonzero_indices = np.where(is_nonzero)[0]
+nan_indices = np.where(is_nan)[0]
+
+print("Given Array:", given_array)
+print("Zero Indices:", zero_indices)
+print("Non-Zero Indices:", nonzero_indices)
+print("NaN Indices:", nan_indices)
+
+
+
+import pandas as pd
+import numpy as np
+
+# Set a seed for reproducibility
+np.random.seed(42)
+
+# Create a dataframe with 3 columns and 50 rows
+data = {
+    'Column1': np.random.rand(50),
+    'Column2': np.random.rand(50),
+    'Column3': np.random.rand(50)
+}
+
+df = pd.DataFrame(data)
+
+# Replace 10% of values with null values
+null_indices = np.random.choice(df.size, size=int(0.1 * df.size), replace=False)
+df.values.flat[null_indices] = np.nan
+
+# a. Identify and count missing values in a dataframe
+missing_values = df.isnull().sum()
+print("Missing Values:")
+print(missing_values)
+
+# b. Drop the column having more than 5 null values
+df = df.dropna(thresh=len(df) - 5, axis=1)
+
+# c. Identify the row label having the maximum sum of all values in a row and drop that row
+max_sum_row_label = df.sum(axis=1).idxmax()
+df = df.drop(index=max_sum_row_label)
+
+# d. Sort the dataframe on the basis of the first column
+df = df.sort_values(by='Column1')
+
+# e. Remove all duplicates from the first column
+df = df.drop_duplicates(subset='Column1')
+
+# f. Find the correlation between the first and second column and covariance between the second and third column
+correlation = df['Column1'].corr(df['Column2'])
+covariance = df['Column2'].cov(df['Column3'])
+print("Correlation between Column1 and Column2:", correlation)
+print("Covariance between Column2 and Column3:", covariance)
+
+# g. Detect the outliers and remove the rows having outliers
+outliers = ((df - df.mean()).abs() > 2 * df.std()).any(axis=1)
+df = df[~outliers]
+
+# h. Discretize the second column and create 5 bins
+df['Column2_bins'] = pd.cut(df['Column2'], bins=5)
+
+# Display the final dataframe
+print("Final DataFrame:")
+print(df)
+
+
+import pandas as pd
+
+# Load data from Excel files into dataframes
+day1_df = pd.read_excel('day1.xlsx')
+day2_df = pd.read_excel('day2.xlsx')
+
+# a. Perform merging of the two dataframes to find the names of students who attended the workshop on both days
+both_days_attendance = pd.merge(day1_df, day2_df, on='Name', how='inner')
+print("Names of students who attended the workshop on both days:")
+print(both_days_attendance['Name'])
+
+# b. Find names of all students who attended the workshop on either of the days
+either_day_attendance = pd.merge(day1_df, day2_df, on='Name', how='outer')
+print("\nNames of students who attended the workshop on either of the days:")
+print(either_day_attendance['Name'])
+
+# c. Merge two dataframes row-wise and find the total number of records in the dataframe
+merged_row_wise = pd.concat([day1_df, day2_df], ignore_index=True)
+total_records = len(merged_row_wise)
+print("\nTotal number of records after merging row-wise:", total_records)
+
+# d. Merge two dataframes and use two columns names and duration as multi-row indexes. Generate descriptive statistics for this multi-index.
+merged_multi_index = pd.merge(day1_df, day2_df, on=['Name', 'Duration'], how='outer')
+multi_index_statistics = merged_multi_index.groupby(['Name', 'Duration']).describe()
+print("\nDescriptive statistics for multi-index (Name, Duration):")
+print(multi_index_statistics)
+
+
+
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn.datasets import load_iris
+
+# Load Iris dataset
+iris = load_iris()
+iris_df = pd.DataFrame(data=iris.data, columns=iris.feature_names)
+iris_df['Target'] = iris.target
+iris_df['Class'] = iris.target_names[iris.target]
+
+# a. Plot bar chart to show the frequency of each class label in the data
+class_counts = iris_df['Class'].value_counts()
+plt.figure(figsize=(8, 6))
+class_counts.plot(kind='bar', color='skyblue')
+plt.title('Frequency of Each Class Label in Iris Dataset')
+plt.xlabel('Class Label')
+plt.ylabel('Frequency')
+plt.show()
+
+# b. Draw a scatter plot for Petal width vs Sepal width
+plt.figure(figsize=(8, 6))
+sns.scatterplot(x='petal width (cm)', y='sepal width (cm)', hue='Class', data=iris_df)
+plt.title('Scatter Plot: Petal width vs Sepal width')
+plt.xlabel('Petal Width (cm)')
+plt.ylabel('Sepal Width (cm)')
+plt.legend()
+plt.show()
+
+# c. Plot density distribution for feature petal length
+plt.figure(figsize=(8, 6))
+sns.kdeplot(iris_df['petal length (cm)'], shade=True)
+plt.title('Density Distribution for Petal Length')
+plt.xlabel('Petal Length (cm)')
+plt.ylabel('Density')
+plt.show()
+
+# d. Use a pair plot to show pairwise bivariate distribution in the Iris Dataset
+plt.figure(figsize=(12, 10))
+sns.pairplot(iris_df, hue='Class', markers=["o", "s", "D"], palette='husl')
+plt.suptitle('Pairwise Bivariate Distribution in the Iris Dataset', y=1.02)
+plt.show()
+
+
+
+import pandas as pd
+import numpy as np
+
+# Creating a sample sales dataset
+data = {
+    'Date': pd.date_range('2023-01-01', '2023-01-10', freq='D').append(
+        pd.date_range('2023-01-15', '2023-01-20', freq='D')),
+    'Product': ['A', 'B', 'A', 'B', 'A', 'B', 'A', 'B', 'A', 'B', 'A', 'B', 'A', 'B', 'A', 'B', 'A', 'B', 'A', 'B'],
+    'Sales': [10, 15, 8, 12, 14, 20, 9, 18, 11, 14, np.nan, 22, 13, 16, 10, 17, 19, np.nan, 12, 15, 20]
+}
+
+sales_df = pd.DataFrame(data)
+
+# a. Compute mean of a series grouped by another series
+mean_sales_by_product = sales_df.groupby('Product')['Sales'].mean()
+print("Mean Sales by Product:")
+print(mean_sales_by_product)
+
+# b. Fill an intermittent time series to replace all missing dates with values of the previous non-missing date.
+sales_df = sales_df.set_index('Date')
+sales_df = sales_df.resample('D').ffill()
+sales_df = sales_df.reset_index()
+
+# c. Perform appropriate year-month string to dates conversion.
+sales_df['YearMonth'] = pd.to_datetime(sales_df['Date']).dt.to_period('M')
+print("\nDataframe with YearMonth:")
+print(sales_df)
+
+# d. Split a dataset to group by two columns and then sort the aggregated results within the groups.
+grouped_sorted_data = sales_df.groupby(['YearMonth', 'Product']).agg({'Sales': 'sum'}).sort_values(['YearMonth', 'Sales'])
+print("\nGrouped and Sorted Data:")
+print(grouped_sorted_data)
+
+# e. Split a given dataframe into groups with bin counts.
+bins = [0, 10, 15, 20, np.inf]
+labels = ['0-10', '10-15', '15-20', '20+']
+sales_df['SalesRange'] = pd.cut(sales_df['Sales'], bins=bins, labels=labels)
+bin_counts = sales_df['SalesRange'].value_counts()
+print("\nSales Range Bin Counts:")
+print(bin_counts)
+
+
+
+import pandas as pd
+
+# Create the dataframe
+data = {
+    'Name': ['Mudit Chauhan', 'Seema Chopra', 'Rani Gupta', 'Aditya Narayan', 'Sanjeev Sahni', 'Prakash Kumar',
+             'Ritu Agarwal', 'Akshay Goel', 'Meeta Kulkarni', 'Preeti Ahuja', 'Sunil Das Gupta', 'Sonali Sapre',
+             'Rashmi Talwar', 'Ashish Dubey', 'Kiran Sharma', 'Sameer Bansal'],
+    'Birth_Month': ['December', 'January', 'March', 'October', 'February', 'December', 'September', 'August', 'July',
+                    'November', 'April', 'January', 'June', 'May', 'February', 'October'],
+    'Gender': ['M', 'F', 'F', 'M', 'M', 'M', 'F', 'M', 'F', 'F', 'M', 'F', 'F', 'M', 'F', 'M'],
+    'Pass_Division': ['III', 'II', 'I', 'I', 'II', 'III', 'I', 'I', 'II', 'II', 'III', 'I', 'III', 'II', 'II', 'I']
+}
+
+df = pd.DataFrame(data)
+
+# a. Perform one hot encoding of the last two columns of categorical data using the get_dummies() function.
+one_hot_encoded_df = pd.get_dummies(df, columns=['Gender', 'Pass_Division'])
+
+# b. Sort this data frame on the “Birth Month” column
+month_order = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+one_hot_encoded_df['Birth_Month'] = pd.Categorical(one_hot_encoded_df['Birth_Month'], categories=month_order, ordered=True)
+sorted_df = one_hot_encoded_df.sort_values(by='Birth_Month')
+
+# Display the results
+print("One Hot Encoded DataFrame:")
+print(one_hot_encoded_df)
+
+print("\nSorted DataFrame based on Birth Month:")
+print(sorted_df)
+
+
+import pandas as pd
+
+# Create the dataframe
+data = {
+    'Name': ['Shah', 'Vats', 'Vats', 'Kumar', 'Vats', 'Kumar', 'Shah', 'Shah', 'Kumar', 'Vats'],
+    'Gender': ['Male', 'Male', 'Female', 'Female', 'Female', 'Male', 'Male', 'Female', 'Female', 'Male'],
+    'MonthlyIncome': [114000.00, 65000.00, 43150.00, 69500.00, 155000.00, 103000.00, 55000.00, 112400.00, 81030.00, 71900.00]
+}
+
+df = pd.DataFrame(data)
+
+# a. Calculate and display familywise gross monthly income.
+familywise_gross_income = df.groupby('Name')['MonthlyIncome'].sum()
+print("Familywise Gross Monthly Income:")
+print(familywise_gross_income)
+
+# b. Calculate and display the member with the highest monthly income in a family.
+max_income_member = df.loc[df.groupby('Name')['MonthlyIncome'].idxmax()]
+print("\nMember with the Highest Monthly Income in Each Family:")
+print(max_income_member)
+
+# c. Calculate and display monthly income of all members with income greater than Rs. 60000.00.
+high_income_members = df[df['MonthlyIncome'] > 60000.00]
+print("\nMonthly Income of Members with Income Greater than Rs. 60000.00:")
+print(high_income_members)
+
+# d. Calculate and display the average monthly income of the female members in the Shah family.
+shah_female_avg_income = df[(df['Name'] == 'Shah') & (df['Gender'] == 'Female')]['MonthlyIncome'].mean()
+print("\nAverage Monthly Income of Female Members in the Shah Family:")
+print(shah_female_avg_income)
+
+
+original_dict = {'Boys': [72, 68, 70, 69, 74], 'Girls': [63, 65, 69, 62, 61]}
+
+result_list = [{'Boys': boys_height, 'Girls': girls_height} for boys_height, girls_height in zip(original_dict['Boys'], original_dict['Girls'])]
+
+print(result_list)
+
+
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Given DataFrame EXERCISE
+data = {'Name': ['A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'D', 'D', 'D', 'D', 'E', 'E', 'E'],
+        'Diet': ['Low fat', 'Low fat', 'No fat', 'No fat', 'No fat', 'Low fat', 'Low fat', 'Low fat', 'Low fat', 'Low fat', 'Low fat', 'No fat', 'Low fat', 'Low fat', 'Low fat'],
+        'Pulse': [85, 85, 88, 90, 92, 93, 97, 97, 94, 80, 82, 83, 91, 92, 91],
+        'Time(min)': [40, 45, 30, 10, 15, 30, 15, 15, 30, 10, 15, 30, 10, 15, 30],
+        'Kind': ['walking', 'walking', 'running', 'walking', 'rest', 'rest', 'rest', 'rest', 'walking', 'walking', 'rest', 'rest', 'rest', 'running', 'running']}
+
+exercise_df = pd.DataFrame(data)
+
+# (a) Create a new DataFrame SELECTED with a hierarchical index on columns "Name" and "Diet".
+selected_df = exercise_df.set_index(['Name', 'Diet'])
+
+# Find the maximum pulse rate for each individual in the SELECTED DataFrame.
+max_pulse = selected_df.groupby(['Name', 'Diet'])['Pulse'].max()
+
+# (b) Create a figure with two subplots
+fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+
+# First subplot: Compare average pulse rate of individuals
+exercise_df.groupby(['Name', 'Diet'])['Pulse'].mean().unstack().plot(kind='bar', ax=axes[0])
+axes[0].set_title('Average Pulse Rate by Individual')
+axes[0].set_ylabel('Average Pulse Rate')
+
+# Second subplot: Relationship between 'Pulse' and 'Time' with color encoding using 'Kind'
+scatter_plot = exercise_df.plot.scatter(x='Pulse', y='Time(min)', c='Kind', colormap='viridis', ax=axes[1])
+axes[1].set_title('Relationship between Pulse and Time')
+axes[1].set_xlabel('Pulse')
+axes[1].set_ylabel('Time (min)')
+
+# Save the figure
+plt.savefig('exerciseplot.jpeg')
+
+# Find the correlation between the first and second column
+correlation = exercise_df[['Pulse', 'Time(min)']].corr().iloc[0, 1]
+
+# Find the covariance between the second and third column
+covariance = exercise_df[['Time(min)', 'Kind']].cov().iloc[0, 1]
+
+# (c) Use map function to convert all values in the 'Diet' attribute to uppercase
+exercise_df['Diet'] = exercise_df['Diet'].map(lambda x: x.upper())
+
+# Display the results
+print('(a) Maximum Pulse Rate for Each Individual:\n', max_pulse)
+print('(b) Correlation between Pulse and Time:', correlation)
+print('(b) Covariance between Time and Kind:', covariance)
+print('(c) DataFrame with Uppercase Diet:\n', exercise_df)
+
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Assuming you have a DataFrame named 'rubies' with columns: carat, cut, clarity, color, and price_per_carat
+
+# (i) Draw box plots for all numerical columns grouped by cut
+rubies.boxplot(column=['carat', 'price_per_carat'], by='cut', vert=False, patch_artist=True)
+plt.suptitle('Box Plots for Numerical Columns Grouped by Cut')
+plt.show()
+
+# (ii) Display the per carat average price of rubies grouped by clarity and color
+average_price_per_carat = rubies.groupby(['clarity', 'color'])['price_per_carat'].mean().reset_index()
+print('Per Carat Average Price Grouped by Clarity and Color:\n', average_price_per_carat)
+
+
+import pandas as pd
+
+# Assuming DS is the DataFrame with the given data
+# Convert 'Date' to datetime format (if it's not already)
+DS['Date'] = pd.to_datetime(DS['Date'])
+
+# Upsampling to daily frequency
+upsampled_data = DS.resample('D').ffill()
+print("Upsampled Data:")
+print(upsampled_data)
+
+# Downsampling to monthly frequency
+downsampled_data = DS.resample('M').mean()
+print("\nDownsampled Data:")
+print(downsampled_data)
+
+
+
+# Assuming DS is the DataFrame with the given data
+# Convert 'Date' to datetime format (if it's not already)
+DS['Date'] = pd.to_datetime(DS['Date'])
+
+# Resample to monthly frequency and perform OHLC analysis
+ohlc_data = DS.resample('M').ohlc()
+print("OHLC Analysis:")
+print(ohlc_data)
+
+
+# Assuming DS is the DataFrame with the given data
+# Convert 'Date' to datetime format (if it's not already)
+DS['Date'] = pd.to_datetime(DS['Date'])
+
+# Add 'Moving Avg' column with rolling average of 4 consecutive values in the 'VWAP' column
+DS['Moving Avg'] = DS['VWAP'].rolling(window=4).mean()
+print("Data with Moving Avg Column:")
+print(DS)
+
+
